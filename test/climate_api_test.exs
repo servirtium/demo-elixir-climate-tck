@@ -15,10 +15,11 @@ defmodule ClimateAPITest do
   end
 
   test "for Great Britain from 1985 to 1995" do
-    assert average_rainfall(1985, 1985, "GBR") == {:error, "No rainfall data found"}
+    assert average_rainfall(1985, 1995, "GBR") ==
+             {:error, "No rainfall data found for years 1985 to 1995"}
   end
 
-  test "for Middle Earth" do
-    assert average_rainfall(1980, 1999, "MDE") == {:error, "No rainfall data found"}
+  test "Middle Earth isn't a real place" do
+    assert average_rainfall(1980, 1999, "MDE") == {:error, "Invalid country code"}
   end
 end
