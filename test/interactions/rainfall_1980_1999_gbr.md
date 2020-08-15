@@ -29,7 +29,7 @@ Content-Security-Policy: default-src 'self'
 Cache-Control: no-cache
 Secure: true
 HttpOnly: true
-Transfer-Encoding: chunked
+# Transfer-Encoding: chunked # This causes a HTTP timeout
 ```
 
 ### Response body recorded for playback (200: application/xml):

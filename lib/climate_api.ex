@@ -7,7 +7,7 @@ defmodule ClimateAPI do
     "/climateweb/rest/v1/country/annualavg/pr/#{from_year}/#{to_year}/#{country_code}.xml"
   end
 
-  @spec average_rainfall(integer(), integer(), String.t()) :: float()
+  @spec average_rainfall(String.t(), integer(), integer(), String.t()) :: float()
   def average_rainfall(domain \\ @host, from_year, to_year, country_code) do
     url = domain <> path(from_year, to_year, country_code)
 
