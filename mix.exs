@@ -22,7 +22,9 @@ defmodule ServirtiumDemo.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.6"},
-      {:sweet_xml, "~> 0.6"}
+      {:sweet_xml, "~> 0.6"},
+      {:servirtium_elixir, path: "../servirtium_elixir"},
+      {:plug_cowboy, "~> 2.0"}
     ]
   end
 end

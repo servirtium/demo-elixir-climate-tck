@@ -1,37 +1,25 @@
 defmodule ClimateAPI do
-  use HTTPoison.Base
   import SweetXml
 
   @host "http://climatedataapi.worldbank.org"
-
-  def process_request_url(url) do
-    @host <> url
-  end
-
-  def process_response_body("Invalid country code" <> _), do: "Invalid country code"
-
-  def process_response_body(body) do
-    body
-    |> xpath(~x"/list", rainfall: ~x".//annualData/double/text()"fl)
-  end
 
   def path(from_year, to_year, country_code) do
     "/climateweb/rest/v1/country/annualavg/pr/#{from_year}/#{to_year}/#{country_code}.xml"
   end
 
   @spec average_rainfall(integer(), integer(), String.t()) :: float()
-  def average_rainfall(from_year, to_year, country_code) do
-    url = path(from_year, to_year, country_code)
+  def average_rainfall(domain \\ @host, from_year, to_year, country_code) do
+    url = domain <> path(from_year, to_year, country_code)
 
-    case get(url) do
-      {:ok, %HTTPoison.Response{status_code: 200, body: "Invalid country code"}} ->
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: "Invalid country code" <> _}} ->
         {:error, "Invalid country code"}
 
-      {:ok, %HTTPoison.Response{status_code: 200, body: %{rainfall: []}}} ->
-        {:error, "No rainfall data found for years #{from_year} to #{to_year}"}
-
-      {:ok, %HTTPoison.Response{status_code: 200, body: %{rainfall: rainfall_data}}} ->
-        {:ok, Enum.sum(rainfall_data) / length(rainfall_data)}
+      {:ok, %HTTPoison.Response{status_code: _, body: body}} ->
+        case body |> xpath(~x"/list//annualData/double/text()"fl) do
+          [] -> {:error, "No rainfall data found for years #{from_year} to #{to_year}"}
+          rainfall_data -> {:ok, Enum.sum(rainfall_data) / length(rainfall_data)}
+        end
 
       _ ->
         {:error, "No rainfall data found for years #{from_year} to #{to_year}"}
