@@ -1,31 +1,31 @@
 defmodule ClimateAPITest do
   use ExUnit.Case
 
-  describe "Call remote server" do
-    test "average UK rainfall" do
+  describe "Directly using worldbank climate web-APIs," do
+    test "should be able to determine average British rainfall" do
       assert ClimateAPI.average_rainfall(1980, 1999, "GBR") == {:ok, 988.8454972331015}
     end
 
-    test "average French rainfall" do
+    test "should be able to determine average French rainfall" do
       assert ClimateAPI.average_rainfall(1980, 1999, "FRA") == {:ok, 913.7986955122727}
     end
 
-    test "average Egypt rainfall" do
+    test "should be able to determine average Egyptian rainfall" do
       assert ClimateAPI.average_rainfall(1980, 1999, "EGY") == {:ok, 54.58587712129825}
     end
 
-    test "no data available for Great Britain from 1985 to 1995" do
+    test "should not be able to determine for Britain with bad dates" do
       assert ClimateAPI.average_rainfall(1985, 1995, "GBR") ==
                {:error, "No rainfall data found for years 1985 to 1995"}
     end
 
-    test "Error Middle Earth isn't a real place" do
+    test "should not be able to determine rainfall for `Middle Earth`" do
       assert ClimateAPI.average_rainfall(1980, 1999, "MDE") == {:error, "Invalid country code"}
     end
   end
 
-  describe "Servirtium playback mode" do
-    test "average UK rainfall" do
+  describe "With Servirtium playing back worldbank climate web-APIs," do
+    test "should be able to determine average British rainfall" do
       Plug.Cowboy.http(
         Plug.Servirtium.Playback,
         [filename: "test/interactions/rainfall_1980_1999_gbr.md"],
@@ -38,7 +38,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Playback.HTTP)
     end
 
-    test "average French rainfall" do
+    test "should be able to determine average French rainfall" do
       Plug.Cowboy.http(
         Plug.Servirtium.Playback,
         [filename: "test/interactions/rainfall_1980_1999_fra.md"],
@@ -51,7 +51,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Playback.HTTP)
     end
 
-    test "average Egyptian rainfall" do
+    test "should be able to determine average Egyptian rainfall" do
       Plug.Cowboy.http(
         Plug.Servirtium.Playback,
         [filename: "test/interactions/rainfall_1980_1999_egy.md"],
@@ -64,7 +64,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Playback.HTTP)
     end
 
-    test "no data available for Great Britain from 1985 to 1995" do
+    test "should not be able to determine for Britain with bad dates" do
       Plug.Cowboy.http(
         Plug.Servirtium.Playback,
         [filename: "test/interactions/rainfall_1985_1995_gbr.md"],
@@ -77,7 +77,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Playback.HTTP)
     end
 
-    test "Error Middle Earth isn't a real place" do
+    test "should not be able to determine rainfall for `Middle Earth`" do
       Plug.Cowboy.http(
         Plug.Servirtium.Playback,
         [filename: "test/interactions/rainfall_1980_1999_mde.md"],
@@ -91,8 +91,8 @@ defmodule ClimateAPITest do
     end
   end
 
-  describe "Servirtium pass through record mode" do
-    test "average UK rainfall" do
+  describe "With Servirtium recording worldbank climate web-APIs," do
+    test "should be able to determine average British rainfall" do
       Plug.Cowboy.http(
         Plug.Servirtium.Recorder,
         [
@@ -108,7 +108,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Recorder.HTTP)
     end
 
-    test "average French rainfall" do
+    test "should be able to determine average French rainfall" do
       Plug.Cowboy.http(
         Plug.Servirtium.Recorder,
         [
@@ -124,7 +124,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Recorder.HTTP)
     end
 
-    test "average Egyptian rainfall" do
+    test "should be able to determine average Egyptian rainfall" do
       Plug.Cowboy.http(
         Plug.Servirtium.Recorder,
         [
@@ -140,7 +140,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Recorder.HTTP)
     end
 
-    test "no data available for Great Britain from 1985 to 1995" do
+    test "should not be able to determine for Britain with bad dates" do
       Plug.Cowboy.http(
         Plug.Servirtium.Recorder,
         [
@@ -156,7 +156,7 @@ defmodule ClimateAPITest do
       Plug.Cowboy.shutdown(Plug.Servirtium.Recorder.HTTP)
     end
 
-    test "Error Middle Earth isn't a real place" do
+    test "should not be able to determine rainfall for `Middle Earth`" do
       Plug.Cowboy.http(
         Plug.Servirtium.Recorder,
         [
