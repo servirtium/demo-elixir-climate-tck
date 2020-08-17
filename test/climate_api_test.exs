@@ -92,16 +92,21 @@ defmodule ClimateAPITest do
   end
 
   describe "Servirtium pass through record mode" do
-    # test "average UK rainfall" do
-    #   Plug.Cowboy.http(Plug.Servirtium.Playback, file"test/interactions/rainfall_1980_1999_gbr.md",
-    #     port: 34567
-    #   )
+    test "average UK rainfall" do
+      Plug.Cowboy.http(
+        Plug.Servirtium.Recorder,
+        [
+          base_url: "http://climatedataapi.worldbank.org",
+          filename: "test/interactions/rainfall_1980_1999_gbr_record.md"
+        ],
+        port: 34572
+      )
 
-    #   assert ClimateAPI.average_rainfall("localhost:34567", 1980, 1999, "GBR") ==
-    #            {:ok, 988.8454972331015}
+      assert ClimateAPI.average_rainfall("localhost:34572", 1980, 1999, "GBR") ==
+               {:ok, 988.8454972331015}
 
-    #   Plug.Cowboy.shutdown(Plug.Servirtium.Playback.HTTP)
-    # end
+      Plug.Cowboy.shutdown(Plug.Servirtium.Recorder.HTTP)
+    end
 
     # test "average French rainfall" do
     #   Plug.Cowboy.http(Plug.Servirtium.Playback, filename: "test/interactions/rainfall_1980_1999_fra.md",
